@@ -62,7 +62,7 @@ const formatMsg = (author, item) => {
 const cmd = (msg, id) => {
     if (debug) {
         console.log([
-            `[!item] ${msg.author.username} => ${id}`
+            `[!id] ${msg.author.username} => ${id}`
         ].join('\n'))
     }
 
