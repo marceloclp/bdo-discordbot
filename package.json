@@ -1,0 +1,24 @@
+{
+  "name": "bdo-discordbot",
+  "version": "1.0.0",
+  "description": "A bot for Discord that will display information about Black Desert Online.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "discordbot",
+    "bdo",
+    "blackdesert"
+  ],
+  "author": "Marcelo Perrella",
+  "license": "MIT",
+  "dependencies": {
+    "bdo-scraper": "^1.0.0",
+    "discord.js": "^11.5.1",
+    "request-promise": "^4.2.4"
+  }
+}
