@@ -4,9 +4,7 @@ A bot for Discord that displays information about Black Desert Online retrieved 
 
 ## Installation
 
-If you don't want to mess around with setting your own bot, you can invite the bot from the [DiscordBots](https://discordbots.org/bot/583196968910848021) webpage.
-
-If you want to host your own version of the Bot, you can follow these steps:
+To host your own version of the Bot, you can follow these steps:
 1) Go to the [Discord Dev Portal](https://discordapp.com/developers/applications/) page and click on "New Application".
 2) Fill out the name for your bot. You can change it later.
 3) After created, add the Bot to your server by replacing the `CLIENTID` in the following uri `https://discordapp.com/oauth2/authorize?&client_id=CLIENTID&scope=bot&permissions=8` with your Bot's client id which can be found on the page.
