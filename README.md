@@ -17,7 +17,11 @@ To host your own version of the Bot, you can follow these steps:
 
 ## Configuration
 
-As of now you can change the `prefix` and the primary language of the bot by going to `src/config.json`. The current supported languages are `en` and `pt`. You can also disabled `debug` but there is just no reason to do it.
+As of now you can change the `prefix` and the primary language of the bot by going to `src/config.json`. For the primary language, change `locale` to one of the following
+```javascript
+"us" // => english
+"pt" // => portuguese
+``` 
 
 ## Usage
 
