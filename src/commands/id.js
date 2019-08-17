@@ -20,7 +20,7 @@ const formatArr = (arr, header, icon) => {
 }
 
 const formatStats = (stats) => {
-    if (stats.damage === null)
+    if (!stats)
         return null
 
     const width = getCellWidth(Object.values(stats))

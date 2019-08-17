@@ -17,7 +17,7 @@
   "author": "Marcelo Perrella",
   "license": "MIT",
   "dependencies": {
-    "bdo-scraper": "^1.0.0",
+    "bdo-scraper": "^1.0.3",
     "discord.js": "^11.5.1",
     "request-promise": "^4.2.4"
   }
