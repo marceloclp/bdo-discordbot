@@ -14,10 +14,10 @@ client.on('message', (msg) => {
     
     const args = msg.content.slice(config.prefix.length).trim().split(/ +/g)
     const cmd  = args.shift().toLowerCase()
-    
-    if      (cmd === 'search') cmds.search(msg, args)
-    else if (cmd === 'id')     cmds.id(msg, args.join(' '))
-    else if (cmd === 'recipe') cmds.recipe(msg, args)
+    const key  = Object.keys(cmds).find(k => k === cmd)
+
+    if (key)
+        cmds[key](msg, args)
 })
 
 try {

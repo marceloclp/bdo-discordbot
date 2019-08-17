@@ -1,9 +1,9 @@
 const search = require('./search')
 const recipe = require('./recipe')
-const id     = require('./id')
+const item   = require('./item')
 
 module.exports = {
     search,
-    id,
+    item,
     recipe,
 }

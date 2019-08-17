@@ -50,7 +50,7 @@ const sendError = (msg, id, uri, author = msg.author.toString()) => {
 
 module.exports = (msg, id) => {
     if (debug)
-        console.log(`[!id] ${msg.author.username} => ${id}`)
+        console.log(`[!item] ${msg.author.username} => ${id}`)
 
     const uri = `https://bdocodex.com/${locale}/item/${id}`
 
