@@ -1,0 +1,11 @@
+{
+    "stats": {
+        "damage": "dagger",
+        "defense": "shield",
+        "accuracy": "bow_and_arrow",
+        "rabbit": "rabbit",
+        "dreduction": "helmet_with_cross"
+    },
+    "list_effects":      "small_blue_diamond",
+    "list_enhancements": "small_orange_diamond"
+}

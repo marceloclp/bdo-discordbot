@@ -1,84 +1,71 @@
-const BDOScraper        = require('bdo-scraper')
+const BDOScraper = require('bdo-scraper')
 const { debug, locale } = require('./../config.json')
+const ICONS = require('./../icons.json')
 
 const {
     map_grade_to_icon,
     map_type_to_icon,
-    padding,
-    getCellWidth,
+    parseTable,
+    parseList,
+    parseHeader,
+    parseIcon,
 } = require('./lib')
 
-const formatArr = (arr, header, icon) => {
-    if (!arr.length)
-        return null
-    
-    return [
-        `**${header}:**`,
-        arr.map(str => `${icon}${str}`).join('\n'),
-        ''
-    ].join('\n')
-}
-
 const formatStats = (stats) => {
-    if (!stats)
-        return null
-
-    const width = getCellWidth(Object.values(stats))
-
-    return [
-        `**Stats:**`,
-        [':dagger: `',            `| Damage (AP)      | ${stats.damage     + padding(width, stats.damage)} |\``    ].join(''),
-        [':shield: `',            `| Defense (DP)     | ${stats.defense    + padding(width, stats.defense)} |\``   ].join(''),
-        [':bow_and_arrow: `',     `| Accuracy         | ${stats.accuracy   + padding(width, stats.accuracy)} |\``  ].join(''),
-        [':rabbit: `',            `| Evasion          | ${stats.evasion    + padding(width, stats.evasion)} |\``   ].join(''),
-        [':helmet_with_cross: `', `| Damage Reduction | ${stats.dreduction + padding(width, stats.dreduction)} |\``].join(''),
-        ''
-    ].join('\n')
+    const icons = Object.values(ICONS.stats)
+    return parseHeader('Stats') + parseTable([
+        { data: ['Damage (AP)', 'Defense (DP)', 'Accuracy', 'Evasion', 'Damage Reduction'] },
+        { data: Object.values(stats) }
+    ]).split('\n').map(
+        (e, i) => `${parseIcon(icons[i])}${e}`
+    ).join('\n')
 }
 
-const formatMsg = (author, item) => {
-    return [
-        // Forces textbox to be highlighted for the user who made the request.
-        `${author}\n`,
-
-        // Item name (item english name)
+const sendSuccess = (msg, item, author = msg.author.toString()) => {
+    const res = [
+        author + '\n',
         `**__${item.name}__**` + (item.name_en ? ` *(${item.name_en})*` : ''),
         item.description,
-
         [
             `**Type:** ${map_type_to_icon(item.type)}`,
             `**Grade:** ${map_grade_to_icon(item.grade)}`,
             `**Weight:** ${item.weight}\n`,
         ].join(' | '),
-
-        formatArr(item.item_effects,   'Item Effects',        ':small_blue_diamond: '),
-        formatArr(item.enhanc_effects, 'Enhancement Effects', ':small_orange_diamond: '),
+        parseList(item.item_effects, 'Item Effects', ICONS.list_effects) + '\n',
+        parseList(item.enhanc_effects, 'Enhancement Effects', ICONS.list_enhancements) + '\n',
         formatStats(item.stats),
-
-        item.link
+        item.link,
     ].filter(e => e).join('\n')
+
+    msg.channel.send(res)
 }
 
-const cmd = (msg, id) => {
-    if (debug) {
-        console.log([
-            `[!id] ${msg.author.username} => ${id}`
-        ].join('\n'))
-    }
+const sendError = (msg, id, uri, author = msg.author.toString()) => {
+    const res = [
+        `Oops, ${author}, it seems item **${id}** doesn't exist. Maybe check the link below :)`,
+        `<${uri}>`
+    ].join('\n')
+    msg.channel.send(res)
+}
 
-    const isLocaleEn = locale === 'en'
-    const uri        = `https://bdocodex.com/${locale}/item/${id}`
+module.exports = (msg, id) => {
+    if (debug)
+        console.log(`[!id] ${msg.author.username} => ${id}`)
 
-    BDOScraper.loadMultiple([
-        `${uri}.`,
-        !isLocaleEn ? uri.replace(locale, 'en') : null
-    ].filter(e => e)).then(scrapers => {
+    const uri = `https://bdocodex.com/${locale}/item/${id}`
+
+    BDOScraper.loadMultiple([...new Set(
+        [uri, `https://bdocodex.com/us/item/${id}`]
+    )]).then(scrapers => {
+        if (scrapers.every(e => e === null)) {
+            // Item doesn't exist.
+            sendError(msg, id, uri)
+            return
+        }
+
         let item = {}
-
         scrapers.forEach(scraper => {
-
-            // Default language scraper.
-            if (scraper._uri.substr(-1) === '.') {
+            if (scraper._locale === locale) {
                 item.name           = scraper.getName()
                 item.grade          = scraper.getGrade()
                 item.stats          = scraper.getStats()
@@ -86,22 +73,14 @@ const cmd = (msg, id) => {
                 item.item_effects   = scraper.getItemEffects()
                 item.enhanc_effects = scraper.getEnhancementEffects()
                 item.description    = scraper.getDescription()
-                item.link           = uri
-
-                if (isLocaleEn)
-                    item.type = scraper.getType()
+                item.link           = scraper._uri
             }
-
-            // English scraper if english is not the default language.
-            else {
-                item.type    = scraper.getType()
-                item.name_en = scraper.getName()
+            if (scraper._locale === 'us') {
+                item.type           = scraper.getType()
+                item.name_en        = scraper.getName()
             }
-
         })
 
-        msg.channel.send(formatMsg(msg.author.toString(), item))
+        sendSuccess(msg, item)
     })
 }
-
-module.exports = cmd
