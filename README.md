@@ -31,6 +31,13 @@ Currently the bot is only capable of looking up items based on a search term, an
 Displays a list of the items with the most similar names to the search term provided.
 ![!search](https://github.com/marceloclp/bdo-discordbot/blob/master/docs/bot-search.png?raw=true)
 
-#### `!id <item id>`
+#### `!tem <item id>`
 Displays information about the item corresponding to the id provided.
-![!id](https://github.com/marceloclp/bdo-discordbot/blob/master/docs/bot-id.png?raw=true)
+(The image bellow is outdated, the current command is `!item`, not `!id`.)
+![!item](https://github.com/marceloclp/bdo-discordbot/blob/master/docs/bot-id.png?raw=true)
+
+#### `!recipe <item id> <craft amount (optional)>`
+Displays the recipes for the item corresponding to the id provided. Be careful to provide the `id` for an item, rather than the `id` for a recipe.
+
+**NOTE:** Currently, it only supports __cooking__ recipes. Anything else may cause the bot to crash.
+![!recipe](https://github.com/marceloclp/bdo-discordbot/blob/master/docs/bot-recipe.png?raw=true)
